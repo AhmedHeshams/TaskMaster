@@ -53,7 +53,7 @@ TASKMASTER
 
 ## Screenshot
 
-![Project Screenshot]((img/test.png)
+![Project Screenshot](img/test.png)
 
 ## Getting Started
 
