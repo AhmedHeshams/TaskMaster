@@ -1,0 +1,174 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>TaskMaster</title>
+</head>
+<body class="grey lighten-3"">
+
+  <!-- NAVBAR -->
+  <nav class="z-depth-0 grey lighten-4">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">
+        <img src="img/logo.svg" style="width: 180px; margin-top: 10px;">
+      </a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="logged-in"  style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+          </li>
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text" id="logout">Logout</a>
+          </li>
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Guide</a>
+          </li>
+          <li class="logged-out" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+          </li>
+          <li class="logged-out" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
+          </li>
+        </span>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- SIGN UP MODAL -->
+  <div id="modal-signup" class="modal">
+    <div class="modal-content">
+      <h4>Sign up</h4><br />
+      <form id="signup-form">
+        <div class="input-field">
+          <input type="email" id="signup-email" required />
+          <label for="signup-email">Email address</label>
+        </div>
+        <div class="input-field">
+          <input type="password" id="signup-password" required />
+          <label for="signup-password">Choose password</label>
+        </div>
+        <div class="input-field">
+          <input type="text" id="signup-bio" required />
+          <label for="signup-bio">One Line Bio</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Sign up</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="modal-login" class="modal">
+    <div class="modal-content">
+      <h4>Login</h4><br />
+      <form id="login-form">
+        <div class="input-field">
+          <input type="email" id="login-email" required />
+          <label for="login-email">Email address</label>
+        </div>
+        <div class="input-field">
+          <input type="password" id="login-password" required />
+          <label for="login-password">Your password</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ACCOUNT MODAL -->
+  <div id="modal-account" class="modal">
+    <div class="modal-content center-align">
+      <h4>Account details</h4><br />
+      <div class="account-details"></div>
+    </div>
+  </div>
+
+  <!-- CREATE TASK MODAL -->
+  <div id="modal-create" class="modal">
+    <div class="modal-content">
+      <h4>Create Task</h4><br />
+      <form id="create-form">
+        <div class="input-field">
+          <input type="text" id="title" required>
+          <label for="title">Task Title</label>
+        </div>
+        <div class="input-field">
+          <textarea id="content" class="materialize-textarea" required></textarea>
+          <label for="content">Task Content</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Create</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TASK LIST -->
+  <div class="container" style="margin-top: 40px;">
+    <ul class="collapsible z-depth-0 guides" style="border: none;">
+      <!-- <li>
+        <div class="collapsible-header grey lighten-4">Task title</div>
+        <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
+      </li> !-->
+      
+    </ul>
+  </div>
+  
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import {  
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword, signOut,
+            onAuthStateChanged 
+          } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+    import { 
+            getFirestore, collection, onSnapshot,
+            addDoc, deleteDoc, doc, setDoc, getDoc,
+            query, where,
+            orderBy, serverTimestamp,
+            updateDoc 
+          } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC08c1MpdMQ2m6J3VrRquzXgNpV4oK3i94",
+      authDomain: "taskmaster99.firebaseapp.com",
+      projectId: "taskmaster99",
+      storageBucket: "taskmaster99.appspot.com",
+      messagingSenderId: "249163518578",
+      appId: "1:249163518578:web:e97d47c64446357c5228eb"
+    };
+  
+    // Initialize Firebase
+    window.app = initializeApp(firebaseConfig);
+    window.auth = getAuth();
+    window.db = getFirestore();
+    // collection ref
+    window.colRef = collection(db, 'tasks');
+    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
+    window.collection = collection;
+    window.onSnapshot = onSnapshot;
+    window.addDoc = addDoc;
+    window.setDoc = setDoc;
+    window.getDoc = getDoc;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.query = query;
+    window.where = where;
+    window.orderBy = orderBy;
+    window.serverTimestamp = serverTimestamp;
+    window.updateDoc = updateDoc;
+    
+  </script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/index.js"></script>
+</body>
+</html>
